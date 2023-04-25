@@ -19,11 +19,11 @@ export const listMoviesPaginationService = async (
   let order: 'asc' | 'desc' =
     queries.order === 'asc' || queries.order === 'desc' ? queries.order : 'asc';
 
-  if (!perPage || perPage < 0 || perPage > 5) {
+  if (!perPage || perPage <= 0 || perPage >= 5) {
     perPage = 5;
   }
 
-  if (!page || page < 0) {
+  if (!page || page <= 0) {
     page = 1;
   }
 
