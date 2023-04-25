@@ -40,13 +40,15 @@ export const listMoviesPaginationService = async (
   let prevPage: string | null = '';
   let nextPage: string | null = '';
 
+  const baseUrl: string = 'http://localhost:3000'
+
   prevPage =
     page - 1 == 0
       ? null
-      : `http://localhost:3000/movies?page=${page - 1}&perPage=${perPage}`;
+      : `${baseUrl}/movies?page=${page - 1}&perPage=${perPage}`;
   nextPage =
     count > perPage * page
-      ? `http://localhost:3000/movies?page=${page + 1}&perPage=${perPage}`
+      ? `${baseUrl}/movies?page=${page + 1}&perPage=${perPage}`
       : null;
 
   return {
