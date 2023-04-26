@@ -7,10 +7,8 @@ export const listMoviesPaginationService = async (
 ): Promise<TMoviePagination> => {
   const moviesRepo = AppDataSource.getRepository(Movie);
 
-  const count: number = await moviesRepo.count();
-
-  let page: number = queries.page ? Number(queries.page) : 1;
-  let perPage: number = queries.perPage ? Number(queries.perPage) : 5;
+  let page: number | undefined = queries.page ? Number(queries.page) : 1;
+  let perPage: number | undefined = queries.perPage ? Number(queries.perPage) : 5;
 
   let sort: 'price' | 'duration' | 'id' =
     queries.sort === 'price' || queries.sort === 'duration'
@@ -19,17 +17,11 @@ export const listMoviesPaginationService = async (
   let order: 'asc' | 'desc' =
     queries.order === 'asc' || queries.order === 'desc' ? queries.order : 'asc';
 
-  if (!perPage || perPage <= 0 || perPage >= 5) {
-    perPage = 5;
-  }
+  if (!perPage || perPage <= 0 || perPage >= 5) perPage = 5;
 
-  if (!page || page <= 0) {
-    page = 1;
-  }
+  if (!page || page <= 0) page = 1;
 
-  if (sort === 'id') {
-    order = 'asc';
-  }
+  if (sort === 'id') order = 'asc';
 
   const pagination: Movie[] = await moviesRepo.find({
     order: { [sort]: order },
@@ -37,10 +29,11 @@ export const listMoviesPaginationService = async (
     take: perPage,
   });
 
-  let prevPage: string | null = '';
-  let nextPage: string | null = '';
+  let prevPage: string | null;
+  let nextPage: string | null;
 
-  const baseUrl: string = 'http://localhost:3000'
+  const count: number = await moviesRepo.count();
+  const baseUrl: string = 'http://localhost:3000';
 
   prevPage =
     page - 1 == 0
